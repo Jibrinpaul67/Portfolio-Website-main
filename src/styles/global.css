@@ -1,0 +1,398 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DESIGN SYSTEM — Neo-Brutalist
+   ============================================================ */
+
+/* --- Theme Tokens --- */
+@theme {
+  /* Colors */
+  --color-bg: #ffffff;
+  /* Pure white base for continuous background */
+  --color-fg: #111111;
+  /* Rich charcoal black */
+  --color-main: #ffffff;
+  /* Crisp white panels */
+  --color-cyan: #b8a2e3;
+  /* Modern Lavender instead of Nachiket's Neo-Blue */
+  --color-yellow: #ff7a59;
+  /* Warm Coral/Terracotta instead of Nachiket's Yellow */
+  --color-pink: #86efac;
+  /* Minty Sage Green instead of Nachiket's Hot Pink */
+  --color-blue: #3b82f6;
+  /* Vibrant Blue for the new 4th selection color */
+
+  /* Fonts */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+  --font-blog: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+
+  /* Neobrutalism specifics */
+  --border-width: 3px;
+  --box-shadow-x: 4px;
+  --box-shadow-y: 4px;
+  --box-shadow-color: #000000;
+
+  /* Spacing scale */
+  --spacing-page-x: clamp(1.5rem, 5vw, 4rem);
+  --spacing-section: clamp(3rem, 8vw, 6rem);
+
+  /* Container */
+  --container-max: 1000px;
+}
+
+html.dark {
+  --color-bg: #1a1a1a;
+  --color-fg: #e8e8e8;
+  --color-main: #242424;
+  --color-cyan: #9b85c9;
+  --color-yellow: #e06a4c;
+  --color-pink: #2d8a57;
+  /* Darker, richer emerald green for better white text contrast */
+  --color-blue: #60a5fa;
+}
+
+/* --- Base Reset & Typography --- */
+@layer base {
+  @media (pointer: fine) {
+
+    html.custom-cursor-active,
+    html.custom-cursor-active * {
+      cursor: none !important;
+    }
+  }
+
+  #magic-cursor {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid var(--color-fg);
+    background: transparent;
+    pointer-events: none;
+    z-index: 9999;
+    --cursor-rotate: 0deg;
+    overflow: hidden;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      border-radius 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 0.3s ease,
+      backdrop-filter 0.3s ease,
+      border-width 0.3s ease,
+      box-shadow 0.3s ease;
+    will-change: transform, width, height;
+  }
+
+  html.custom-cursor-active #magic-cursor {
+    display: block;
+  }
+
+  #magic-cursor.lens-active {
+    width: var(--lens-size, 80px);
+    height: var(--lens-size, 80px);
+    border-width: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: invert(1) contrast(1.2);
+  }
+
+  html.dark #magic-cursor.lens-active {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: invert(1) contrast(1.2);
+  }
+
+  #magic-cursor.selector-active {
+    width: 26px;
+    height: 26px;
+    border-width: 2px;
+    border-radius: 4px 50% 50% 50%;
+    background: transparent;
+    backdrop-filter: none;
+    --cursor-rotate: 45deg;
+  }
+
+  html.dark #magic-cursor.selector-active {
+    background: transparent;
+  }
+
+  #magic-cursor.image-lens-active,
+  #magic-cursor.image-lens-fading {
+    width: 300px;
+    height: 300px;
+    border-width: 3px;
+    background: transparent;
+    backdrop-filter: none;
+    overflow: hidden;
+    z-index: 90;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    overscroll-behavior: none;
+  }
+
+  /* Visually hidden but readable by search engines and screen readers */
+  .sr-only-styled {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    min-height: 100vh;
+    overscroll-behavior: none;
+  }
+
+  /* Base Light Grey Dots Background */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+
+  html.dark body::before {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1.5px, transparent 1.5px);
+  }
+
+  /* Interactive Darker Dots Highlight (Spotlight) */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image: radial-gradient(rgba(0, 0, 0, 0.35) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+    pointer-events: none;
+    /* Mask centered on mouse coordinates */
+    mask-image: radial-gradient(circle 160px at var(--mouse-x, -999px) var(--mouse-y, -999px), black 20%, transparent 100%);
+    -webkit-mask-image: radial-gradient(circle 160px at var(--mouse-x, -999px) var(--mouse-y, -999px), black 20%, transparent 100%);
+  }
+
+  html.dark body::after {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.25) 1.5px, transparent 1.5px);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -0.02em;
+    width: fit-content;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    text-transform: uppercase;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    text-transform: uppercase;
+  }
+
+  h3 {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+  }
+
+  p {
+    margin: 0;
+    font-weight: 500;
+  }
+
+  a {
+    color: var(--color-fg);
+    text-decoration: none;
+  }
+
+  hr {
+    border: none;
+    border-top: var(--border-width) solid var(--color-fg);
+    margin: 0;
+  }
+
+  code,
+  .mono {
+    font-family: var(--font-mono);
+  }
+
+  ::selection {
+    background-color: var(--color-pink);
+    color: #000;
+  }
+
+  /* Image Theme Toggling */
+  .img-dark {
+    display: none !important;
+  }
+
+  html.dark .img-dark {
+    display: block !important;
+  }
+
+  html.dark .img-light {
+    display: none !important;
+  }
+}
+
+/* --- Utility Classes --- */
+@layer utilities {
+  .container-page {
+    max-width: var(--container-max);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--spacing-page-x);
+    padding-right: var(--spacing-page-x);
+  }
+
+  /* Core Neobrutalism Box */
+  .neo-box {
+    background-color: var(--color-main);
+    border: var(--border-width) solid var(--color-fg);
+    box-shadow: var(--x-shadow, var(--box-shadow-x)) var(--y-shadow, var(--box-shadow-y)) 0px 0px var(--box-shadow-color);
+    transition: box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Base Panel classes for large blocks */
+  .neo-panel {
+    border: var(--border-width) solid var(--color-fg);
+    box-shadow: var(--x-shadow, var(--box-shadow-x)) var(--y-shadow, var(--box-shadow-y)) 0px 0px var(--box-shadow-color);
+    transition: box-shadow 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .neo-panel--cyan {
+    background-color: var(--color-cyan);
+  }
+
+  .neo-panel--yellow {
+    background-color: var(--color-yellow);
+  }
+
+  .neo-panel--pink {
+    background-color: var(--color-pink);
+  }
+
+  .neo-panel--white {
+    background-color: var(--color-main);
+  }
+
+  /* Button with Hover effect */
+  .neo-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-main);
+    border: var(--border-width) solid var(--color-fg);
+    box-shadow: var(--box-shadow-x) var(--box-shadow-y) 0px 0px var(--box-shadow-color);
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.25s ease;
+  }
+
+  .neo-btn:hover {
+    transform: translate(var(--box-shadow-x), var(--box-shadow-y));
+    box-shadow: 0px 0px 0px 0px var(--box-shadow-color);
+    background-color: var(--color-cyan);
+    /* Shifts Standard White to Light Lavender */
+  }
+
+  .neo-btn--yellow {
+    background-color: var(--color-yellow);
+  }
+
+  .neo-btn--yellow:hover {
+    background-color: var(--color-pink);
+    /* Shifts Terracotta Orange to Light Sage Green */
+  }
+
+  .neo-tag {
+    display: inline-block;
+    background-color: var(--color-pink);
+    border: 2px solid var(--color-fg);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .neo-tag--cyan {
+    background-color: var(--color-cyan);
+  }
+
+  .neo-tag--pink {
+    background-color: var(--color-pink);
+  }
+
+  .neo-tag--yellow {
+    background-color: var(--color-yellow);
+  }
+}
+
+/* --- Arcade Pop-up Animations (NYTimes Games / Neobrutalist style) --- */
+@keyframes arcadePopIn {
+  0% {
+    transform: scale(0) rotate(-12deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.15) rotate(4deg);
+  }
+  75% {
+    transform: scale(0.92) rotate(-2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes arcadePopOut {
+  0% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  40% {
+    transform: scale(1.1) rotate(3deg);
+  }
+  100% {
+    transform: scale(0) rotate(-8deg);
+    opacity: 0;
+  }
+}
+
+.arcade-pop-in {
+  animation: arcadePopIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.arcade-pop-out {
+  animation: arcadePopOut 0.3s cubic-bezier(0.36, 0, 0.66, -0.56) forwards;
+}
