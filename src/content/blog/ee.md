@@ -1,6 +1,6 @@
 ---
 title: "Esther, Eden, and Engineering"
-description: "I am not Esther; Well I am, but I've never related to that nam"
+description: "I am not Esther; Well I am, but I've never related to that name"
 date: 2026-09-23
 tags: ["Introspection","Tech & Identity"]
 draft: false
